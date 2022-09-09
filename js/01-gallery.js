@@ -3,27 +3,39 @@ import { galleryItems } from "./gallery-items.js";
 
 // console.log(galleryItems);
 
-const imageGallery = document.querySelector(".gallery");
-console.log(imageGallery);
+const galleryItemsEl = document.querySelector(".gallery");
 
-// function createColorCardsMarkup(colors) {
-//   return colors
-//     .map(({ hex, rgb }) => {
-//       return `
-//     <div class="color-card">
-//      <div><div><div> <div
-//      class="color-swatch"
-//      data-hex="${hex}"
-//      data-rgb="${rgb}"
-//      style="background-color: ${hex}"
-//    ></div></div></div></div>
-//       <div class="color-meta">
-//         <p>HEX: ${hex}</p>
-//         <p>RGB: ${rgb}</p>
-//       </div>
-//     </div>
-//     `;
-//     })
-//     .join("");
-// }
+const selectorGallery = (images) => {
+  return images
+    .map(({ preview, original, description }) => {
+      return `<div class="gallery__item"><a class="gallery__link" href=${original}><img class= "gallery__image" src="${preview}" data-source =${original} alt="${description}"></div>`;
+    })
+    .join("");
+};
 
+const cardImagesMarkup = selectorGallery(galleryItems);
+
+galleryItemsEl.insertAdjacentHTML("afterbegin", cardImagesMarkup);
+
+galleryItemsEl.addEventListener("click", selectGalleryEl);
+
+function selectGalleryEl(event) {
+  event.preventDefault();
+  if (event.target.nodeName !== "IMG") {
+    return;
+  }
+  const instance = basicLightbox.create(
+    `<img src="${event.target.dataset.source}" width="800" height="600">`
+  );
+
+  instance.show();
+
+  const onKeydownEsc = (event) => {
+    // console.log(event.code);
+    if (event.code === "Escape") {
+      instance.close();
+    }
+  };
+
+  window.addEventListener("keydown", onKeydownEsc);
+}
