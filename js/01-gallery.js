@@ -21,19 +21,20 @@ galleryItemsEl.addEventListener("click", selectGalleryEl);
 
 function selectGalleryEl(event) {
   event.preventDefault();
+
   if (event.target.nodeName !== "IMG") {
     return;
   }
   const instance = basicLightbox.create(
-    `<img src="${event.target.dataset.source}" width="800" height="600">`
+    `<img src="${event.target.dataset.source}" alt="${event.target.alt}"  width="800" height="600">`
   );
 
   instance.show();
 
   const onKeydownEsc = (event) => {
-    // console.log(event.code);
     if (event.code === "Escape") {
       instance.close();
+      window.removeEventListener("keydown", onKeydownEsc);
     }
   };
 
